@@ -22,9 +22,10 @@ const About = () => {
       const elements = [
         { el: contentRef.current?.querySelector('.about-greeting'), delay: 200 },
         { el: contentRef.current?.querySelector('.about-title'), delay: 400 },
-        { el: contentRef.current?.querySelector('.about-description'), delay: 600 },
-        { el: contentRef.current?.querySelector('.about-stats'), delay: 800 },
-        { el: imageRef.current, delay: 1000 }
+        { el: contentRef.current?.querySelector('.about-role'), delay: 600 },
+        { el: contentRef.current?.querySelector('.about-description'), delay: 800 },
+        { el: contentRef.current?.querySelector('.about-stats'), delay: 1000 },
+        { el: imageRef.current, delay: 200 } // Changed from 1200 to 200 to sync with content
       ];
 
       elements.forEach(({ el, delay }) => {
@@ -44,6 +45,7 @@ const About = () => {
             const elements = [
               contentRef.current?.querySelector('.about-greeting'),
               contentRef.current?.querySelector('.about-title'),
+              contentRef.current?.querySelector('.about-role'),
               contentRef.current?.querySelector('.about-description'),
               contentRef.current?.querySelector('.about-stats'),
               imageRef.current
@@ -169,8 +171,8 @@ const About = () => {
                 </div>
               </div>
               
-              <div className="image-ring-1"></div>
-              <div className="image-ring-2"></div>
+              <div className="absolute inset-0 rounded-full border-2 border-blue-300/30 animate-pulse" style={{ animationDuration: '3s' }}></div>
+              <div className="absolute inset-0 rounded-full border-2 border-purple-300/30 animate-pulse" style={{ animationDuration: '4s', animationDelay: '0.5s' }}></div>
             </div>
           </div>
         </div>
@@ -228,28 +230,6 @@ const About = () => {
           }
         }
 
-        @keyframes ring-pulse-1 {
-          0%, 100% {
-            transform: scale(1);
-            opacity: 0.3;
-          }
-          50% {
-            transform: scale(1.08);
-            opacity: 0.15;
-          }
-        }
-
-        @keyframes ring-pulse-2 {
-          0%, 100% {
-            transform: scale(1);
-            opacity: 0.25;
-          }
-          50% {
-            transform: scale(1.12);
-            opacity: 0.1;
-          }
-        }
-
         .animate-float {
           animation: float 20s ease-in-out infinite;
         }
@@ -264,27 +244,6 @@ const About = () => {
 
         .animate-float-fast {
           animation: float-fast 15s ease-in-out infinite;
-        }
-
-        .image-ring-1,
-        .image-ring-2 {
-          position: absolute;
-          inset: 0;
-          border-radius: 9999px;
-          border: 2px solid;
-          pointer-events: none;
-          will-change: transform;
-        }
-
-        .image-ring-1 {
-          border-color: rgba(147, 197, 253, 0.3);
-          animation: ring-pulse-1 3s ease-in-out infinite;
-        }
-
-        .image-ring-2 {
-          border-color: rgba(196, 181, 253, 0.3);
-          animation: ring-pulse-2 4s ease-in-out infinite;
-          animation-delay: 0.5s;
         }
       `}</style>
     </section>
