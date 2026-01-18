@@ -10,7 +10,7 @@ const Hero = ({ scrollToSection }) => {
 
   const handleResumeDownload = () => {
     const link = document.createElement('a');
-    link.href = '../public/resume.pdf'; 
+    link.href = '../resume.pdf'; 
     link.download = 'Shah_Fawad_Khan_Resume.pdf';
     link.target = '_blank'; 
     link.rel = 'noopener noreferrer';
@@ -310,7 +310,7 @@ const Hero = ({ scrollToSection }) => {
         </div>
       </div>
 
-      <div className="absolute bottom-6 sm:bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce z-10">
+      <div className="absolute bottom-8 sm:bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce z-10">
         <div className="w-6 h-10 border-2 border-gray-400 rounded-full flex items-start justify-center p-2">
           <div className="w-1.5 h-3 bg-gray-400 rounded-full animate-scroll"></div>
         </div>

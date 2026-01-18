@@ -140,7 +140,7 @@ const Projects = () => {
     <section 
       ref={sectionRef}
       id="projects" 
-      className="relative w-full min-h-screen overflow-hidden bg-white py-20 px-4 sm:px-6 lg:px-8"
+      className="relative w-full min-h-screen overflow-hidden bg-white py-14 px-4 sm:px-6 lg:px-8"
     >
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(18)].map((_, i) => {
