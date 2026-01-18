@@ -12,6 +12,8 @@ const Hero = ({ scrollToSection }) => {
     const link = document.createElement('a');
     link.href = '../public/resume.pdf'; 
     link.download = 'Shah_Fawad_Khan_Resume.pdf';
+    link.target = '_blank'; 
+    link.rel = 'noopener noreferrer';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

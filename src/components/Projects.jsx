@@ -1,13 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { ExternalLink } from 'lucide-react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import chat from '../assets/chat.png';
 import ecom from '../assets/ecom.png';
 import sc from '../assets/sc.png';
 import task from '../assets/task.png';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const PROJECTS = [
   {
@@ -62,76 +58,82 @@ const Projects = () => {
       }
     });
 
-    const ctx = gsap.context(() => {
-      gsap.from(headerRef.current.children, {
-        y: 30,
-        opacity: 0,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: "power1.out",
-        scrollTrigger: {
-          trigger: headerRef.current,
-          start: "top 85%",
-          end: "top 60%",
-          toggleActions: "play none none reset",
-          scrub: 0.5
+    const animateIn = () => {
+      const headerElements = [
+        { el: headerRef.current?.querySelector('.header-subtitle'), delay: 200 },
+        { el: headerRef.current?.querySelector('.header-title'), delay: 400 },
+        { el: headerRef.current?.querySelector('.header-description'), delay: 600 },
+      ];
+
+      headerElements.forEach(({ el, delay }) => {
+        if (el) {
+          setTimeout(() => {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+          }, delay);
         }
       });
 
-      gsap.from(timelineRef.current, {
-        scaleY: 0,
-        transformOrigin: "top",
-        duration: 0.8,
-        ease: "power1.out",
-        scrollTrigger: {
-          trigger: timelineRef.current,
-          start: "top 80%",
-          end: "top 50%",
-          toggleActions: "play none none reset",
-          scrub: 0.5
-        }
-      });
+      if (timelineRef.current) {
+        setTimeout(() => {
+          timelineRef.current.style.opacity = '1';
+          timelineRef.current.style.transform = 'scaleY(1)';
+        }, 800);
+      }
 
       projectRefs.current.forEach((project, index) => {
         if (project) {
-          const isEven = index % 2 === 0;
-          
-          gsap.from(project, {
-            x: isEven ? -40 : 40,
-            opacity: 0,
-            duration: 0.6,
-            ease: "power1.out",
-            scrollTrigger: {
-              trigger: project,
-              start: "top 90%",
-              end: "top 65%",
-              toggleActions: "play none none reset",
-              scrub: 0.5
-            }
-          });
-
-          const dot = project.querySelector('.timeline-dot');
-          if (dot) {
-            gsap.from(dot, {
-              scale: 0,
-              opacity: 0,
-              duration: 0.4,
-              ease: "back.out(1.2)",
-              scrollTrigger: {
-                trigger: project,
-                start: "top 85%",
-                toggleActions: "play none none reset"
-              }
-            });
-          }
+          const delay = 1000 + (index * 200);
+          setTimeout(() => {
+            project.style.opacity = '1';
+            project.style.transform = 'translateY(0) translateX(0)';
+          }, delay);
         }
       });
-    }, sectionRef);
-
-    return () => {
-      ctx.revert();
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const headerElements = [
+              headerRef.current?.querySelector('.header-subtitle'),
+              headerRef.current?.querySelector('.header-title'),
+              headerRef.current?.querySelector('.header-description'),
+            ];
+
+            headerElements.forEach((el) => {
+              if (el) {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+              }
+            });
+
+            if (timelineRef.current) {
+              timelineRef.current.style.opacity = '0';
+              timelineRef.current.style.transform = 'scaleY(0)';
+            }
+
+            projectRefs.current.forEach((project, index) => {
+              if (project) {
+                const isLeft = index % 2 === 0;
+                project.style.opacity = '0';
+                project.style.transform = isLeft ? 'translateX(-30px)' : 'translateX(30px)';
+              }
+            });
+
+            animateIn();
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -180,16 +182,24 @@ const Projects = () => {
         })}
       </div>
 
-      {/* Content */}
       <div className="relative z-10 max-w-7xl mx-auto">
         <div ref={headerRef} className="text-center mb-24">
-          <p className="text-sm uppercase tracking-[0.3em] text-gray-500 font-semibold mb-4">
+          <p 
+            className="header-subtitle text-sm uppercase tracking-[0.3em] text-gray-500 font-semibold mb-4 transition-all duration-1000 opacity-0"
+            style={{ transform: 'translateY(30px)' }}
+          >
             Portfolio
           </p>
-          <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-5 tracking-tight">
+          <h2 
+            className="header-title text-5xl md:text-6xl font-bold text-gray-900 mb-5 tracking-tight transition-all duration-1000 opacity-0"
+            style={{ transform: 'translateY(30px)' }}
+          >
             Featured Projects
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p 
+            className="header-description text-xl text-gray-600 max-w-2xl mx-auto transition-all duration-1000 opacity-0"
+            style={{ transform: 'translateY(30px)' }}
+          >
             Building digital experiences with modern technologies
           </p>
         </div>
@@ -197,7 +207,8 @@ const Projects = () => {
         <div className="relative">
           <div 
             ref={timelineRef}
-            className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-200 via-purple-200 to-teal-200 hidden lg:block transform -translate-x-1/2"
+            className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-200 via-purple-200 to-teal-200 hidden lg:block transform -translate-x-1/2 transition-all duration-1000 opacity-0"
+            style={{ transform: 'translateX(-50%) scaleY(0)', transformOrigin: 'top' }}
           ></div>
 
           <div className="space-y-24">
@@ -208,12 +219,11 @@ const Projects = () => {
                 <div
                   key={index}
                   ref={el => projectRefs.current[index] = el}
-                  className="relative"
-                  style={{ willChange: 'transform, opacity' }}
+                  className="relative transition-all duration-1000 opacity-0"
+                  style={{ transform: isLeft ? 'translateX(-30px)' : 'translateX(30px)' }}
                 >
                   <div className={`grid lg:grid-cols-2 gap-8 lg:gap-16 items-center ${!isLeft ? 'lg:grid-flow-dense' : ''}`}>
                     
-                    {/* Image Side */}
                     <div className={`relative group ${!isLeft ? 'lg:col-start-2' : ''}`}>
                       <div className={`absolute -inset-1 bg-gradient-to-r ${project.gradient} rounded-2xl opacity-0 group-hover:opacity-20 blur-xl transition-all duration-500`}></div>
                       
@@ -242,7 +252,6 @@ const Projects = () => {
                           {project.description}
                         </p>
                         
-                        {/* Tech Stack */}
                         <div className="mb-8">
                           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
                             Tech Stack
